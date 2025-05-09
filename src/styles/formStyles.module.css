@@ -1,0 +1,30 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+
+.view p,
+.delete p {
+  font-size: 16px;
+  color: #374151;
+  margin: 12px 0;
+}
+
+.delete p {
+  color: #b91c1c; /* red-700 */
+}
