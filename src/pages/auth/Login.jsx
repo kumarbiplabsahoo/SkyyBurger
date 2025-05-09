@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./login.module.css";
 import { userLogin } from "../../services/authServices";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [loginData, SetLoginData] = useState({
     Email: "",
     Password: "",
@@ -15,9 +16,20 @@ const LoginPage = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await userLogin(loginData).then((res) => {
+    try {
+      const res = await userLogin(loginData);
       console.log(res);
-    });
+
+      if (res?.token) {
+        sessionStorage.setItem("token", res.token);
+        navigate("/");
+      } else {
+        alert("Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("An error occurred. Please try again later.");
+    }
   };
 
   return (
