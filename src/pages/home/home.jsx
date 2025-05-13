@@ -1,19 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Home.module.css";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../../components/ui/Modal";
 import ViewForms from "../../components/Home/ViewForms";
 import DeleteForms from "../../components/Home/DeleteForms";
 import AddForms from "../../components/Home/AddForms";
+import { AllUsersData } from "../../services/userServices";
+import { hideLoader, showLoader } from "../../store/reducers/loader";
+import { useSelector } from "react-redux";
 
 const Home = () => {
-  const data = [
-    { id: 1, name: "John Doe", role: "Manager" },
-    { id: 2, name: "Jane Smith", role: "Developer" },
-    { id: 3, name: "Bob Johnson", role: "Designer" },
-  ];
+  // const data = [
+  //   { id: 1, name: "John Doe", role: "Manager" },
+  //   { id: 2, name: "Jane Smith", role: "Developer" },
+  //   { id: 3, name: "Bob Johnson", role: "Designer" },
+  // ];
 
-  const [modalType, setModalType] = useState(null); 
+  const loading = useSelector((state) => state.loader.loading);
+  const token = sessionStorage.getItem("token");
+
+  const [data, setData] = useState(null);
+  const fetchUsersData = async () => {
+    try {
+      showLoader();
+      await AllUsersData({ token: token }).then((res) => {
+        if (res.status === 200) {
+          setData(res.data);
+        }
+        hideLoader();
+      });
+    } catch (error) {
+      console.error(error);
+      hideLoader();
+    }
+  };
+
+  useEffect(() => {
+    fetchUsersData();
+  }, []);
+
+  const [modalType, setModalType] = useState(null);
 
   const handleClose = () => setModalType(null);
 
@@ -23,7 +49,11 @@ const Home = () => {
     console.log("hello momo");
   };
 
-  return (
+  return loading ? (
+    <>
+      <h1>loading.........</h1>
+    </>
+  ) : (
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Employee List</h2>
@@ -36,17 +66,19 @@ const Home = () => {
         <thead>
           <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Role</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
             <th className={styles.actionsCol}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {data.map((item, i) => (
-            <tr key={item.id}>
+          {data?.map((item, i) => (
+            <tr key={item._id}>
               <td>{i + 1}</td>
-              <td>{item.name}</td>
-              <td>{item.role}</td>
+              <td>{item.First_name}</td>
+              <td>{item.Last_name}</td>
+              <td>{item.Gender}</td>
               <td className={styles.actions}>
                 <FaEye
                   className={styles.icon}
@@ -102,7 +134,7 @@ const Home = () => {
         }
       >
         {modalType === "view" ? (
-          <ViewForms formData={selectedUser}/>
+          <ViewForms formData={selectedUser} />
         ) : modalType === "delete" ? (
           <DeleteForms formData={selectedUser} />
         ) : (
