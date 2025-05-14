@@ -1,43 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./Home.module.css";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../../components/ui/Modal";
 import ViewForms from "../../components/Home/ViewForms";
 import DeleteForms from "../../components/Home/DeleteForms";
 import AddForms from "../../components/Home/AddForms";
-import { AllUsersData } from "../../services/userServices";
-import { hideLoader, showLoader } from "../../store/reducers/loader";
 import { useSelector } from "react-redux";
+import { UseAuth } from "../../hooks/useAuth";
 
 const Home = () => {
-  // const data = [
-  //   { id: 1, name: "John Doe", role: "Manager" },
-  //   { id: 2, name: "Jane Smith", role: "Developer" },
-  //   { id: 3, name: "Bob Johnson", role: "Designer" },
-  // ];
-
+  const { isLoader, setIsloader, data } = UseAuth();
   const loading = useSelector((state) => state.loader.loading);
-  const token = sessionStorage.getItem("token");
-
-  const [data, setData] = useState(null);
-  const fetchUsersData = async () => {
-    try {
-      showLoader();
-      await AllUsersData({ token: token }).then((res) => {
-        if (res.status === 200) {
-          setData(res.data);
-        }
-        hideLoader();
-      });
-    } catch (error) {
-      console.error(error);
-      hideLoader();
-    }
-  };
-
-  useEffect(() => {
-    fetchUsersData();
-  }, []);
 
   const [modalType, setModalType] = useState(null);
 

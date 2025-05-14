@@ -5,6 +5,7 @@ import Signup from "./pages/auth/Signup";
 import Home from "./pages/home/home";
 import Layout from "./components/drawer/layout";
 import PrivateRoute from "./PrivateRoute.jsx";
+import { AuthProvider } from "./contexts/authContext.jsx";
 
 export default function App() {
   return (
@@ -19,9 +20,11 @@ export default function App() {
           <Route
             path="/"
             element={
-              <Layout>
-                <Home />
-              </Layout>
+              <AuthProvider>
+                <Layout>
+                  <Home />
+                </Layout>
+              </AuthProvider>
             }
           />
         </Route>
