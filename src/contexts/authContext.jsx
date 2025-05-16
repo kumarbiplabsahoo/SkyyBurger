@@ -4,9 +4,19 @@ import { AllUsersData } from "../services/userServices";
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [isLoader, setIsloader] = useState(true);
-  const [data, setData] = useState(null);
   const token = sessionStorage.getItem("token");
+  const [data, setData] = useState(null);
+  const [modalType, setModalType] = useState(null);
+  const [user, SetUser] = useState({
+    _id: "",
+    First_name: "",
+    Last_name: "",
+    Email: "",
+    Password: "",
+    Gender: "",
+    Status: true,
+    Institution: null,
+  });
 
   const fetchUsersData = async () => {
     try {
@@ -26,13 +36,22 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     fetchUsersData();
   }, []);
- 
+
+  const handleClose = () => {
+    setModalType(null), SetUser(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
-        isLoader,
-        setIsloader,
+        modalType,
+        setModalType,
+        handleClose,
+        user,
+        SetUser,
         data,
+
+        fetchUsersData,
       }}
     >
       {children}

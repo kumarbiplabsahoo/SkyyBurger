@@ -9,17 +9,23 @@ import { useSelector } from "react-redux";
 import { UseAuth } from "../../hooks/useAuth";
 
 const Home = () => {
-  const { isLoader, setIsloader, data } = UseAuth();
   const loading = useSelector((state) => state.loader.loading);
+  const {
+    modalType,
+    setModalType,
+    handleClose,
+    user,
+    SetUser,
+    data,
+    handleSaveNewUser
+  } = UseAuth();
 
-  const [modalType, setModalType] = useState(null);
-
-  const handleClose = () => setModalType(null);
-
-  const [selectedUser, SetselectedUser] = useState(null);
-
-  const handleFormChange = () => {
-    console.log("hello momo");
+  const handleSave = (modalType) => {
+    if (modalType === "add") {
+      handleSaveNewUser();
+    } else if (modalType === "edit") {
+      console.log(user);
+    }
   };
 
   return loading ? (
@@ -58,7 +64,7 @@ const Home = () => {
                   title="View"
                   onClick={() => {
                     setModalType("view");
-                    SetselectedUser(item);
+                    SetUser(item);
                   }}
                 />
                 <FaEdit
@@ -66,7 +72,7 @@ const Home = () => {
                   title="Edit"
                   onClick={() => {
                     setModalType("edit");
-                    SetselectedUser(item);
+                    SetUser(item);
                   }}
                 />
                 <FaTrash
@@ -74,7 +80,7 @@ const Home = () => {
                   title="Delete"
                   onClick={() => {
                     setModalType("delete");
-                    SetselectedUser(item);
+                    SetUser(item);
                   }}
                 />
               </td>
@@ -99,7 +105,10 @@ const Home = () => {
           modalType !== "view" && (
             <>
               <button onClick={handleClose}>Cancel</button>
-              <button style={{ background: "blue", color: "white" }}>
+              <button
+                style={{ background: "blue", color: "white" }}
+                onClick={() => handleSave(modalType)}
+              >
                 {modalType === "delete" ? "Delete" : "Save"}
               </button>
             </>
@@ -107,11 +116,14 @@ const Home = () => {
         }
       >
         {modalType === "view" ? (
-          <ViewForms formData={selectedUser} />
+          <ViewForms formData={user} />
         ) : modalType === "delete" ? (
-          <DeleteForms formData={selectedUser} />
+          <DeleteForms formData={user} />
         ) : (
-          <AddForms formData={selectedUser} onChange={handleFormChange} />
+          <AddForms
+            user={user}
+            SetUser={SetUser}
+          />
         )}
       </Modal>
     </div>
