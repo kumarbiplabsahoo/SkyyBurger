@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }) => {
         user,
         SetUser,
         data,
+        setData,
 
         fetchUsersData,
       }}

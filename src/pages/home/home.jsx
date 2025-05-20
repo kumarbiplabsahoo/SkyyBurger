@@ -17,14 +17,18 @@ const Home = () => {
     user,
     SetUser,
     data,
-    handleSaveNewUser
+    handleSaveNewUser,
+    handleUpdateUser,
+    handleDeleteUser,
   } = UseAuth();
 
   const handleSave = (modalType) => {
     if (modalType === "add") {
       handleSaveNewUser();
     } else if (modalType === "edit") {
-      console.log(user);
+      handleUpdateUser();
+    } else if (modalType === "delete") {
+      handleDeleteUser();
     }
   };
 
@@ -120,10 +124,7 @@ const Home = () => {
         ) : modalType === "delete" ? (
           <DeleteForms formData={user} />
         ) : (
-          <AddForms
-            user={user}
-            SetUser={SetUser}
-          />
+          <AddForms user={user} SetUser={SetUser} />
         )}
       </Modal>
     </div>

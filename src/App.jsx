@@ -6,6 +6,7 @@ import Home from "./pages/home/home";
 import Layout from "./components/drawer/layout";
 import PrivateRoute from "./PrivateRoute.jsx";
 import { AuthProvider } from "./contexts/authContext.jsx";
+import Institution from "./pages/Institution/index.jsx";
 
 export default function App() {
   return (
@@ -23,6 +24,16 @@ export default function App() {
               <AuthProvider>
                 <Layout>
                   <Home />
+                </Layout>
+              </AuthProvider>
+            }
+          />
+          <Route
+            path="/institution"
+            element={
+              <AuthProvider>
+                <Layout>
+                  <Institution />
                 </Layout>
               </AuthProvider>
             }

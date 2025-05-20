@@ -1,7 +1,11 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/authContext";
 import { hideLoader, showLoader } from "../store/reducers/loader";
-import { CreateNewUser } from "../services/userServices";
+import {
+  CreateNewUser,
+  DeleteUser,
+  UpdateUser,
+} from "../services/userServices";
 
 export const UseAuth = () => {
   const {
@@ -11,6 +15,7 @@ export const UseAuth = () => {
     user,
     SetUser,
     data,
+    setData,
 
     fetchUsersData,
   } = useContext(AuthContext);
@@ -20,7 +25,43 @@ export const UseAuth = () => {
       showLoader();
       await CreateNewUser(user).then((res) => {
         if (res.status === 200) {
-          setData(res.data);
+          handleClose();
+          fetchUsersData();
+        }
+        hideLoader();
+        handleClose();
+      });
+    } catch (error) {
+      console.error(error);
+      hideLoader();
+      handleClose();
+    }
+  };
+
+  const handleUpdateUser = async () => {
+    try {
+      showLoader();
+      await UpdateUser(user).then((res) => {
+        if (res.status === 200) {
+          handleClose();
+          fetchUsersData();
+        }
+        hideLoader();
+        handleClose();
+      });
+    } catch (error) {
+      console.error(error);
+      hideLoader();
+      handleClose();
+    }
+  };
+
+  //DeleteUser
+  const handleDeleteUser = async () => {
+    try {
+      showLoader();
+      await DeleteUser({ Id: user._id }).then((res) => {
+        if (res.status === 200) {
           handleClose();
           fetchUsersData();
         }
@@ -43,5 +84,7 @@ export const UseAuth = () => {
     data,
 
     handleSaveNewUser,
+    handleUpdateUser,
+    handleDeleteUser,
   };
 };
